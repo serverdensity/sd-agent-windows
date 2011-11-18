@@ -58,7 +58,13 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                         var stats = processStats[processId];
                         var cpuPercentage = stats[0];
                         ulong workingSet = stats[1];
-                        decimal memoryPercentage = Decimal.Round(((decimal)workingSet / (decimal)_totalMemory * 100), 2);
+                        decimal totalMemory = (decimal)_totalMemory;
+
+                        decimal memoryPercentage = 0;
+                        if (totalMemory > 0)
+                        {
+                            memoryPercentage = Decimal.Round(((decimal)workingSet / totalMemory * 100), 2);
+                        }
 
                         results.Add(new object[] { processId, imageName, fullUserName, cpuPercentage, memoryPercentage, workingSet });
 

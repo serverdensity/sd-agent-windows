@@ -108,7 +108,11 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                 {
                     using (obj)
                     {
-                        processStats[(uint)obj.GetPropertyValue("IDProcess")] = new ulong[] { (ulong)obj.GetPropertyValue("PercentProcessorTime"), (ulong)obj.GetPropertyValue("WorkingSet") };
+                        var key = (uint)obj.GetPropertyValue("IDProcess");
+                        if (processStats.ContainsKey(key))
+                        {
+                            processStats[key] = new ulong[] { (ulong)obj.GetPropertyValue("PercentProcessorTime"), (ulong)obj.GetPropertyValue("WorkingSet") };
+                        }
                     }
                 }
                 return processStats;

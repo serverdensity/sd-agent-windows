@@ -77,32 +77,35 @@ namespace BoxedIce.ServerDensity.Agent.Downloader
             {
                 try
                 {
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(DefaultUrl);
-                    Log.DebugFormat("Retrieving response from {0}...", DefaultUrl);
-                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                    Log.Debug("done.");
-                    using (Stream stream = response.GetResponseStream())
+                    if (CheckMinRunTimeVersion())
                     {
-                        using (StreamReader reader = new StreamReader(stream))
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(DefaultUrl);
+                        Log.DebugFormat("Retrieving response from {0}...", DefaultUrl);
+                        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                        Log.Debug("done.");
+                        using (Stream stream = response.GetResponseStream())
                         {
-                            string data = reader.ReadToEnd();
-                            Log.Debug(data);
-                            Log.DebugFormat("Converting JSON...");
-                            Dictionary<string, object> json = (Dictionary<string, object>)JsonConvert.DeserializeObject(data, typeof(Dictionary<string, object>));
-                            Log.Debug("done.");
-                            IDictionary<string, string> files = ProcessUpdates(json);
-                            if (files != null)
+                            using (StreamReader reader = new StreamReader(stream))
                             {
-                                _files = files;
-                                OnUpdatesDetected(EventArgs.Empty);
-                            }
-                            else
-                            {
-                                OnNoUpdatesDetected(EventArgs.Empty);
+                                string data = reader.ReadToEnd();
+                                Log.Debug(data);
+                                Log.DebugFormat("Converting JSON...");
+                                Dictionary<string, object> json = (Dictionary<string, object>)JsonConvert.DeserializeObject(data, typeof(Dictionary<string, object>));
+                                Log.Debug("done.");
+                                IDictionary<string, string> files = ProcessUpdates(json);
+                                if (files != null)
+                                {
+                                    _files = files;
+                                    OnUpdatesDetected(EventArgs.Empty);
+                                }
+                                else
+                                {
+                                    OnNoUpdatesDetected(EventArgs.Empty);
+                                }
                             }
                         }
+                        response.Close();
                     }
-                    response.Close();
                     OnComplete(EventArgs.Empty);
                 }
                 catch (ThreadAbortException)
@@ -158,6 +161,39 @@ namespace BoxedIce.ServerDensity.Agent.Downloader
             return _installedVersion;
         }
 
+        private bool CheckMinRunTimeVersion()
+        {
+            string versions = "";
+            try
+            {
+                Microsoft.Win32.RegistryKey key;
+                key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\User Agent\Post Platform");
+                string[] keys = key.GetValueNames();
+                key.Close();
+                versions = "";
+                foreach (string k in keys)
+                {
+                    if (k.ToLower().StartsWith(".net"))
+                    {
+                        versions += k + ",";
+                    }
+                }
+                versions = versions.TrimEnd(new char[] { ',' });
+            }
+            catch (Exception)
+            {
+                // do nothing
+            }
+            if (versions.Contains("3.5") || versions.Contains("4.0"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         #region Event-raising methods
         private void OnError(EventArgs e)
         {
@@ -194,6 +230,8 @@ namespace BoxedIce.ServerDensity.Agent.Downloader
             }
             NoUpdatesDetected(this, e);
         }
+
+
         #endregion
 
         private readonly static ILog Log = LogManager.GetLogger(typeof(Updater));

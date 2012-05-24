@@ -372,7 +372,7 @@ namespace BoxedIce.ServerDensity.Agent.MongoDB
 
                 try
                 {
-                    int namespaces = collection.Count();
+                    long namespaces = collection.Count();
                     dbStats[dbName].Add("namespaces", namespaces);
                 }
                 catch (MongoCommandException)

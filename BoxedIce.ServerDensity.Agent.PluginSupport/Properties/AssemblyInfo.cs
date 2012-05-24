@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Boxed Ice")]
 [assembly: AssemblyProduct("Server Density Plugin Support Library")]
-[assembly: AssemblyCopyright("Copyright © Boxed Ice 2010")]
+[assembly: AssemblyCopyright("Copyright © Boxed Ice 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

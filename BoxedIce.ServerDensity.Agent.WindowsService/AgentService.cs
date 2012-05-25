@@ -12,10 +12,6 @@ namespace BoxedIce.ServerDensity.Agent.WindowsService
 {
     public class AgentService : ServiceBase
     {
-        public static void Main()
-        {
-            ServiceBase.Run(new AgentService());
-        }
 
         protected override void OnStart(string[] args)
         {
@@ -37,6 +33,16 @@ namespace BoxedIce.ServerDensity.Agent.WindowsService
         {
             _agent.Stop();
             base.OnStop();
+        }
+
+        public void ConsoleStart()
+        {
+            OnStart(null);
+        }
+
+        public void ConsoleStop()
+        {
+            OnStop();
         }
 
         private Agent _agent;

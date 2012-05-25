@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using BoxedIce.ServerDensity.Agent.PluginSupport;
 using MongoDB.Driver;
+using MongoDB.Bson;
 using log4net;
+using BoxedIce.ServerDensity.Agent.PluginSupport;
 
 namespace BoxedIce.ServerDensity.Agent.Checks
 {
@@ -18,19 +19,39 @@ namespace BoxedIce.ServerDensity.Agent.Checks
 
         public virtual object DoCheck()
         {
-            Document commandResults = null;
-            Mongo mongo = null;
+
+            // connection to mongo db
+            if (_connectionString.Contains("mongodb://"))
+            {
+                mongo = MongoServer.Create(string.Format("{0}{1}?slaveok=true", _connectionString, _connectionString.EndsWith("/") ? "" : "/"));
+            }
+            else
+            {
+                MongoServerSettings settings = new MongoServerSettings();
+                if (_connectionString.Contains(":"))
+                {
+                    string[] bits = _connectionString.Split(':');
+                    settings.Server = new MongoServerAddress(bits[0], Convert.ToInt32(bits[1]));
+                }
+                else
+                {
+                    settings.Server = new MongoServerAddress(_connectionString);
+                }
+                settings.SlaveOk = true;
+                mongo = MongoServer.Create(settings);
+            }
+
+            // vars to contain result of status check
+            CommandResult commandResults = null;
+            BsonDocument serverStatus;
             
+            // make a status check call
             try
             {
-                mongo = new Mongo(_connectionString);
                 mongo.Connect();
-
-                // In the Linux agent, we get all database names and use the first
-                // one found, but no such functionality exists with this .NET
-                // MongoDB library.
-                Database database = mongo.GetDatabase(DatabaseName);
-                commandResults = database.SendCommand("serverStatus");
+                MongoDatabase database = mongo[DatabaseName];
+                commandResults = database.RunCommand("serverStatus");
+                serverStatus = commandResults.Response;
             }
             catch (Exception ex)
             {
@@ -39,7 +60,7 @@ namespace BoxedIce.ServerDensity.Agent.Checks
             }
             finally
             {
-
+                // disconnect
                 if (mongo != null)
                 {
                     mongo.Disconnect();
@@ -54,19 +75,19 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                 return null;
             }
 
-            Document indexCounters = (Document)commandResults["indexCounters"];
-            Document btree = null;
+            BsonDocument indexCounters = serverStatus["indexCounters"].AsBsonDocument;
+            BsonDocument btree = null;
 
             // Index counters are currently not supported on Windows.
             if (indexCounters["note"] == null)
             {
-                btree = (Document)indexCounters["btree"];
+                btree = indexCounters["btree"].AsBsonDocument;
             }
             else
             {
                 // We add a blank document, since the server is expecting
                 // these btree index values to be present.
-                btree = new Document();
+                btree = new BsonDocument();
                 indexCounters.Add("btree", btree);
                 btree.Add("accesses", 0);
                 btree.Add("accessesPS", 0);
@@ -78,8 +99,8 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                 btree.Add("missRatioPS", 0);
             }
 
-            Document opCounters = (Document)commandResults["opcounters"];
-            Document asserts = (Document)commandResults["asserts"];
+            BsonDocument opCounters = serverStatus["opcounters"].AsBsonDocument;
+            BsonDocument asserts = serverStatus["asserts"].AsBsonDocument;
 
             if (_mongoDBStore == null)
             {
@@ -107,9 +128,9 @@ namespace BoxedIce.ServerDensity.Agent.Checks
             {
                 Log.Debug("Cached data exists, so calculating per sec metrics.");
 
-                Document cachedBtree = (Document)((Document)_mongoDBStore["indexCounters"])["btree"];
-                Document cachedOpCounters = (Document)_mongoDBStore["opcounters"];
-                Document cachedAsserts = (Document)commandResults["asserts"];
+                BsonDocument cachedBtree = (BsonDocument)((BsonDocument)_mongoDBStore["indexCounters"])["btree"];
+                BsonDocument cachedOpCounters = (BsonDocument)_mongoDBStore["opcounters"];
+                BsonDocument cachedAsserts = serverStatus["asserts"].AsBsonDocument;
 
                 btree["accessesPS"] = (float)(((int)btree["accesses"] - (int)cachedBtree["accesses"]) / 60);
                 btree["hitsPS"] = (float)(((int)btree["hits"] - (int)cachedBtree["hits"]) / 60);
@@ -130,7 +151,7 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                 asserts.Add("rolloversPS", (float)(((int)asserts["rollovers"] - (int)cachedAsserts["rollovers"]) / 60));
             }
 
-            _mongoDBStore = commandResults;
+            _mongoDBStore = serverStatus.ToDictionary();
 
             return _mongoDBStore;
         }
@@ -151,7 +172,8 @@ namespace BoxedIce.ServerDensity.Agent.Checks
         #endregion
 
         protected readonly string _connectionString;
-        private Document _mongoDBStore;
+        private MongoServer mongo;
+        private IDictionary<string, object> _mongoDBStore;
         private const string DatabaseName = "local";
         private readonly static ILog Log = LogManager.GetLogger(typeof(MongoDBCheck));
     }

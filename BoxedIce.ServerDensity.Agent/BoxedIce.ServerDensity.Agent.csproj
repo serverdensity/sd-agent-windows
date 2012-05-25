@@ -83,8 +83,8 @@
     <Compile Include="Agent.cs" />
     <Compile Include="AgentConfiguration.cs" />
     <Compile Include="AgentConfigurationSection.cs" />
+    <Compile Include="Checks\ExtendedMongoDBCheck.cs" />
     <Compile Include="Checks\IISCheck.cs" />
-    <Compile Include="Checks\MongoDBCheck.cs" />
     <Compile Include="Checks\DriveInfoBasedDiskUsageCheck.cs" />
     <Compile Include="Checks\PerformanceCounterBasedCheck.cs" />
     <Compile Include="Checks\PerformanceCounterBasedProcessCheck.cs" />
@@ -100,7 +100,6 @@
     <Compile Include="Checks\ProcessorCheck.cs" />
     <Compile Include="Checks\SystemStatsCheck.cs" />
     <Compile Include="Checks\SwapMemoryFreeCheck.cs" />
-    <Compile Include="ExtendedMongoDBLoader.cs" />
     <Compile Include="PayloadPoster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\ITask.cs" />

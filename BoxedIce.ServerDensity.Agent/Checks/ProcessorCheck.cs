@@ -62,23 +62,38 @@ namespace BoxedIce.ServerDensity.Agent.Checks
 
             try
             {
+                // stop the timer before doing this
+                // agent-205
+                _timer.Stop();
+
                 float usage = PerformanceCounter.NextValue();
-                
+
                 if (usage > _max)
                 {
                     _max = usage;
                 }
-                
+
                 if (usage < _min)
                 {
                     _min = usage;
                 }
-                
-                _values.Add(usage);
+
+                // lock added for agent-205
+                // bug pattern followed: http://code.google.com/p/moq/issues/detail?id=249
+                lock (_values)
+                {
+                    _values.Add(usage);
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
+            }
+            finally
+            {
+                // start the timer again
+                // agent-205
+                _timer.Start();
             }
         }
 

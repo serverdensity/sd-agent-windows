@@ -113,24 +113,7 @@ namespace BoxedIce.ServerDensity.Agent
 
                 if (!string.IsNullOrEmpty(_config.MongoDBConnectionString))
                 {
-                    try
-                    {
-                        ExtendedMongoDBLoader loader = new ExtendedMongoDBLoader(_config.MongoDBConnectionString, _config.MongoDBReplSet, _config.MongoDBDBStats);
-                        ICheck check = loader.Load();
-
-                        if (check == null)
-                        {
-                            throw new NullReferenceException();
-                        }
-
-                        Checks.Add(check);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex);
-                        // If the extended MongoDB checks class can't load, fall back to old school.
-                        Checks.Add(new MongoDBCheck(_config.MongoDBConnectionString));
-                    }
+                    Checks.Add(new ExtendedMongoDBCheck(_config.MongoDBConnectionString, _config.MongoDBReplSet, _config.MongoDBDBStats));
                 }
 
                 // flag check

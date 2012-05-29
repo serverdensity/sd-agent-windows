@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using log4net;
@@ -45,7 +45,7 @@ namespace BoxedIce.ServerDensity.Agent.Checks
         {
             _mongoServer.Connect();
 
-            MongoDatabase database = _mongoServer["local"];
+            MongoDatabase database = _mongoServer["admin"];
             CommandResult result = database.RunCommand("serverStatus");
             BsonDocument statusOutput = result.Response;
             IDictionary<string, object> status = new Dictionary<string, object>();
@@ -173,7 +173,7 @@ namespace BoxedIce.ServerDensity.Agent.Checks
 
             BsonDocument btreeOutput = new BsonDocument();
             // Index counters are currently not supported on Windows.
-            if (indexCountersOutput["note"] == null)
+            if (!indexCountersOutput.Contains("note") || indexCountersOutput["note"] == null)
             {
                 btreeOutput = (BsonDocument)indexCountersOutput["btree"];
             }
@@ -289,7 +289,7 @@ namespace BoxedIce.ServerDensity.Agent.Checks
 
         private void FillReplicaSetStatistics(IDictionary<string, object> status)
         {
-            MongoDatabase database = _mongoServer["local"];
+            MongoDatabase database = _mongoServer["admin"];
             CommandResult result = database.RunCommand("isMaster");
             BsonDocument isMasterOutput = result.Response;
             IDictionary<string, object> replSet = new Dictionary<string, object>();

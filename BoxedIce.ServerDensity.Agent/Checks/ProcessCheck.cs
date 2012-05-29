@@ -55,7 +55,16 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                             fullUserName = string.Format(@"{0}\{1}", outParameters["Domain"], outParameters["User"]);
                         }
 
-                        var stats = processStats[processId];
+                        ulong[] stats = null;
+                        try
+                        {
+                            stats = processStats[processId];
+                        }
+                        catch
+                        {
+                            Log.InfoFormat("ProcessID {0} appears to have gone missing, proceeding without it", processId.ToString());
+                            continue;
+                        }
                         var cpuPercentage = stats[0];
                         ulong workingSet = stats[1];
                         decimal totalMemory = (decimal)_totalMemory;
@@ -109,10 +118,7 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                     using (obj)
                     {
                         var key = (uint)obj.GetPropertyValue("IDProcess");
-                        if (processStats.ContainsKey(key))
-                        {
-                            processStats[key] = new ulong[] { (ulong)obj.GetPropertyValue("PercentProcessorTime"), (ulong)obj.GetPropertyValue("WorkingSet") };
-                        }
+                        processStats[key] = new ulong[] { (ulong)obj.GetPropertyValue("PercentProcessorTime"), (ulong)obj.GetPropertyValue("WorkingSet") };
                     }
                 }
                 return processStats;

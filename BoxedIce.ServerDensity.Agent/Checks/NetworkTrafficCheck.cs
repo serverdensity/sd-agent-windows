@@ -55,8 +55,8 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                 else
                 {
 
-                    //if (!results.ContainsKey(key))
-                   // {
+                    if (!results.ContainsKey(key))
+                    {
                         results.Add(key, new Dictionary<string, long>());
 
                         // we need to check if these have overflowed
@@ -73,7 +73,7 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                         // Store now for calculation next time.
                         _networkTrafficStore[key]["recv_bytes"] = recv_overflow[1];
                         _networkTrafficStore[key]["trans_bytes"] = trans_overflow[1];
-                   // }
+                    }
 
                 }
 
@@ -87,8 +87,9 @@ namespace BoxedIce.ServerDensity.Agent.Checks
         /// Check if the value has overflowed and reset to 0 
         /// http://connect.microsoft.com/VisualStudio/feedback/details/734915/getipv4statistics-bytesreceived-and-bytessent
         /// AGENT-199
+        /// Factored into a separate method for testing
         /// </summary>
-        /// <param name="toCheck">string of parameter to look up</param>
+        /// <param name="toCheck">string of parameter to look up (recv / trans)</param>
         /// <param name="store">Past results</param>
         /// <param name="currentValue">current value from the results</param>
         /// <returns>Value with overflow taken into account</returns>
@@ -96,33 +97,23 @@ namespace BoxedIce.ServerDensity.Agent.Checks
         {
             // make up the strings we need to check in the dictionaries
             var bytesString = toCheck + "_bytes";
-            var overflowString = toCheck + "_overflow";
 
+            // if the last was higher than our current, we've overflowed
+            // overflow occurs at UInt32.MaxValue
+            // so if we subtract that in this situation, we'll get the actual delta
             if (currentValue < store[bytesString])
             {
-                if (!store.ContainsKey(overflowString))
-                {
-                    store[overflowString] = 1;
-                    store[bytesString] -= UInt32.MaxValue;
-                }
-                else
-                {
-                    store[overflowString] += 1;
-                    store[bytesString] -= UInt32.MaxValue;
-                }     
+
+                store[bytesString] -= UInt32.MaxValue;
             }
 
-            var overflowValue = store.ContainsKey(overflowString) ? store[overflowString] : 0;
-
             var values = new List<long>();
+
             // calculate the delta
-            //values.Add((currentValue + (UInt32.MaxValue * overflowValue)) - store[bytesString]);
             values.Add(currentValue - store[bytesString]);
+
             // we need the 'raw' value for the next time round
-            //values.Add(currentValue + (UInt32.MaxValue * overflowValue));
             values.Add(currentValue);
-            // pass back the overflow we used, it's useful for debugging
-            values.Add(UInt32.MaxValue * overflowValue);
 
             return values;
 

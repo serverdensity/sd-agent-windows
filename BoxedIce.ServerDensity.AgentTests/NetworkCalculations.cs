@@ -23,7 +23,6 @@ namespace AgentTests
             var result = check.CheckForOverflow("recv", store, 100);
             Assert.AreEqual(result[0], 90);
             Assert.AreEqual(result[1], 100);
-            Assert.AreEqual(result[2], 0);
         }
 
         [TestMethod]
@@ -37,7 +36,6 @@ namespace AgentTests
             var result = check.CheckForOverflow("recv", store, 30001000);
             Assert.AreEqual(result[0], 1000);
             Assert.AreEqual(result[1], 30001000);
-            Assert.AreEqual(result[2], 0);
         }
 
         [TestMethod]
@@ -51,7 +49,6 @@ namespace AgentTests
             var result = check.CheckForOverflow("recv", store, 100);
             Assert.AreEqual(200, result[0]);
             Assert.AreEqual(100, result[1]);
-            Assert.AreEqual(UInt32.MaxValue, result[2]);
         }
 
         [TestMethod]

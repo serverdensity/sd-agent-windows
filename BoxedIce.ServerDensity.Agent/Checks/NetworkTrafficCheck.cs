@@ -58,12 +58,21 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                     if (!results.ContainsKey(key))
                     {
                         results.Add(key, new Dictionary<string, long>());
-                        results[key]["recv_bytes"] = received - _networkTrafficStore[key]["recv_bytes"];
-                        results[key]["trans_bytes"] = sent - _networkTrafficStore[key]["trans_bytes"];
+
+                        // we need to check if these have overflowed
+                        // AGENT-199
+                        Log.ErrorFormat("received: {0}", key + ": " + received.ToString());
+                        Log.ErrorFormat("Previous: {0}", key + ": " + _networkTrafficStore[key]["recv_bytes"].ToString());
+
+                        var recv_overflow = this.CheckForOverflow("recv", _networkTrafficStore[key], received);
+                        var trans_overflow = this.CheckForOverflow("trans", _networkTrafficStore[key], sent);
+
+                        results[key]["recv_bytes"] = recv_overflow[0];
+                        results[key]["trans_bytes"] = trans_overflow[0];
 
                         // Store now for calculation next time.
-                        _networkTrafficStore[key]["recv_bytes"] = received;
-                        _networkTrafficStore[key]["trans_bytes"] = sent;
+                        _networkTrafficStore[key]["recv_bytes"] = recv_overflow[1];
+                        _networkTrafficStore[key]["trans_bytes"] = trans_overflow[1];
                     }
 
                 }
@@ -73,6 +82,42 @@ namespace BoxedIce.ServerDensity.Agent.Checks
         }
 
         #endregion
+
+        /// <summary>
+        /// Check if the value has overflowed and reset to 0 
+        /// http://connect.microsoft.com/VisualStudio/feedback/details/734915/getipv4statistics-bytesreceived-and-bytessent
+        /// AGENT-199
+        /// Factored into a separate method for testing
+        /// </summary>
+        /// <param name="toCheck">string of parameter to look up (recv / trans)</param>
+        /// <param name="store">Past results</param>
+        /// <param name="currentValue">current value from the results</param>
+        /// <returns>Value with overflow taken into account</returns>
+        public List<long> CheckForOverflow(string toCheck, Dictionary<string, long> store, long currentValue)
+        {
+            // make up the strings we need to check in the dictionaries
+            var bytesString = toCheck + "_bytes";
+
+            // if the last was higher than our current, we've overflowed
+            // overflow occurs at UInt32.MaxValue
+            // so if we subtract that in this situation, we'll get the actual delta
+            if (currentValue < store[bytesString])
+            {
+
+                store[bytesString] -= UInt32.MaxValue;
+            }
+
+            var values = new List<long>();
+
+            // calculate the delta
+            values.Add(currentValue - store[bytesString]);
+
+            // we need the 'raw' value for the next time round
+            values.Add(currentValue);
+
+            return values;
+
+        }
 
         private static Dictionary<string, Dictionary<string, long>> _networkTrafficStore = new Dictionary<string, Dictionary<string, long>>();
         private static ILog Log = LogManager.GetLogger(typeof(NetworkTrafficCheck));

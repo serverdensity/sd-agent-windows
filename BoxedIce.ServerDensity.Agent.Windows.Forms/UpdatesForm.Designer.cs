@@ -58,14 +58,14 @@
             // 
             // _doNotShow
             // 
-            this._doNotShow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._doNotShow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._doNotShow.AutoSize = true;
             this._doNotShow.Location = new System.Drawing.Point(16, 53);
             this._doNotShow.Name = "_doNotShow";
-            this._doNotShow.Size = new System.Drawing.Size(128, 17);
+            this._doNotShow.Size = new System.Drawing.Size(151, 17);
             this._doNotShow.TabIndex = 3;
-            this._doNotShow.Text = "Don\'t show this again";
+            this._doNotShow.Text = "Never prompt for updates";
             this._doNotShow.UseVisualStyleBackColor = true;
             // 
             // label1

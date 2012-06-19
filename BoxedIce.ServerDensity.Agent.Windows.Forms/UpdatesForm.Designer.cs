@@ -38,7 +38,7 @@
             // 
             this._close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this._close.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this._close.Location = new System.Drawing.Point(280, 49);
+            this._close.Location = new System.Drawing.Point(304, 49);
             this._close.Name = "_close";
             this._close.Size = new System.Drawing.Size(75, 23);
             this._close.TabIndex = 1;
@@ -49,7 +49,7 @@
             // 
             this._ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this._ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this._ok.Location = new System.Drawing.Point(184, 49);
+            this._ok.Location = new System.Drawing.Point(205, 49);
             this._ok.Name = "_ok";
             this._ok.Size = new System.Drawing.Size(87, 23);
             this._ok.TabIndex = 2;
@@ -63,9 +63,9 @@
             this._doNotShow.AutoSize = true;
             this._doNotShow.Location = new System.Drawing.Point(16, 53);
             this._doNotShow.Name = "_doNotShow";
-            this._doNotShow.Size = new System.Drawing.Size(151, 17);
+            this._doNotShow.Size = new System.Drawing.Size(183, 17);
             this._doNotShow.TabIndex = 3;
-            this._doNotShow.Text = "Never prompt for updates";
+            this._doNotShow.Text = "Do not prompt again until restart";
             this._doNotShow.UseVisualStyleBackColor = true;
             // 
             // label1
@@ -81,7 +81,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(371, 85);
+            this.ClientSize = new System.Drawing.Size(391, 85);
             this.Controls.Add(this.label1);
             this.Controls.Add(this._doNotShow);
             this.Controls.Add(this._ok);

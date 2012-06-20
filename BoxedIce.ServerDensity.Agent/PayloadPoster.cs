@@ -56,30 +56,30 @@ namespace BoxedIce.ServerDensity.Agent
 
             // TODO: this is for quick testing; we'll need to add proxy 
             //       settings, read the response, etc.
-            var client = new WebClient();
-            var data = new NameValueCollection();
-            data.Add("payload", payload);
-            Log.Debug(payload);
-            data.Add("hash", hash);
-            var url = string.Format("{0}{1}postback/", _config.ServerDensityUrl, _config.ServerDensityUrl.EndsWith("/") ? "" : "/");
-            Log.InfoFormat("Posting to {0}", url);
-            
-            if (HttpWebRequest.DefaultWebProxy != null)
+            using (var client = new WebClient())
             {
-                client.Proxy = HttpWebRequest.DefaultWebProxy;
-            }
+                var data = new NameValueCollection();
+                data.Add("payload", payload);
+                Log.Debug(payload);
+                data.Add("hash", hash);
+                var url = string.Format("{0}{1}postback/", _config.ServerDensityUrl, _config.ServerDensityUrl.EndsWith("/") ? "" : "/");
+                Log.InfoFormat("Posting to {0}", url);
 
-            byte[] response = client.UploadValues(url, "POST", data);
-            string responseText = Encoding.ASCII.GetString(response);
+                if (HttpWebRequest.DefaultWebProxy != null)
+                {
+                    client.Proxy = HttpWebRequest.DefaultWebProxy;
+                }
 
-            client.Dispose();
-            
-            if (responseText != "OK")
-            {
-                Log.ErrorFormat("URL {0} returned: {1}", url, responseText);
+                byte[] response = client.UploadValues(url, "POST", data);
+                string responseText = Encoding.ASCII.GetString(response);
+
+                if (responseText != "OK")
+                {
+                    Log.ErrorFormat("URL {0} returned: {1}", url, responseText);
+                }
+
+                Log.Debug(responseText);
             }
-            
-            Log.Debug(responseText);
         }
 
         private static string MD5Hash(string input)

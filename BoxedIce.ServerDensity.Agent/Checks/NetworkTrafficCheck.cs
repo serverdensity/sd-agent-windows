@@ -61,8 +61,8 @@ namespace BoxedIce.ServerDensity.Agent.Checks
 
                         // we need to check if these have overflowed
                         // AGENT-199
-                        Log.ErrorFormat("received: {0}", key + ": " + received.ToString());
-                        Log.ErrorFormat("Previous: {0}", key + ": " + _networkTrafficStore[key]["recv_bytes"].ToString());
+                        Log.InfoFormat("received: {0}", key + ": " + received.ToString());
+                        Log.InfoFormat("Previous: {0}", key + ": " + _networkTrafficStore[key]["recv_bytes"].ToString());
 
                         var recv_overflow = this.CheckForOverflow("recv", _networkTrafficStore[key], received);
                         var trans_overflow = this.CheckForOverflow("trans", _networkTrafficStore[key], sent);

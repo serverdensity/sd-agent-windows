@@ -33,6 +33,7 @@ namespace BoxedIce.ServerDensity.Agent.Checks
         {
             var processStats = ProcessStats();
             var results = new ArrayList();
+            Log.Info("Starting Process Check");
             using (var query = new ManagementObjectSearcher("SELECT * FROM Win32_Process"))
             {
                 foreach (ManagementObject process in query.Get())
@@ -41,6 +42,7 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                     {
                         var processId = (uint)process.GetPropertyValue("ProcessId");
                         var imageName = (string)process.GetPropertyValue("Name");
+                        Log.Info("Name: " + imageName);
 
                         // Ignore System Idle Process for now
                         if (imageName.ToString().ToLower() == "system idle process")
@@ -75,6 +77,7 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                             memoryPercentage = Decimal.Round(((decimal)workingSet / totalMemory * 100), 2);
                         }
 
+                        Log.Info("Adding to results");
                         results.Add(new object[] { processId, imageName, fullUserName, cpuPercentage, memoryPercentage, workingSet });
 
                         // flag check
@@ -101,6 +104,7 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                     }
                 }
 
+                Log.Info("Finished process check");
                 return results;
             }
         }

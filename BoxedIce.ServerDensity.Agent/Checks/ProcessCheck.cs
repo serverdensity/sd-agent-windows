@@ -36,6 +36,10 @@ namespace BoxedIce.ServerDensity.Agent.Checks
             Log.Info("Starting Process Check");
             using (var query = new ManagementObjectSearcher("SELECT * FROM Win32_Process"))
             {
+                query.Options.Timeout = new TimeSpan(0, 0, 10);
+                query.Options.ReturnImmediately = false;
+                Log.Info("Query built");
+
                 foreach (ManagementObject process in query.Get())
                 {
                     try
@@ -114,18 +118,33 @@ namespace BoxedIce.ServerDensity.Agent.Checks
         private Dictionary<uint, ulong[]> ProcessStats()
         {
             var processStats = new Dictionary<uint, ulong[]>();
+            Log.Info("Starting Process Stats");
             // IDProcess is not necessarily the ProcessId of a process, but seems to work
             using (var query = new ManagementObjectSearcher("SELECT IDProcess, PercentProcessorTime, WorkingSet FROM Win32_PerfFormattedData_PerfProc_Process"))
             {
-                foreach (ManagementObject obj in query.Get())
+                try
                 {
-                    using (obj)
+                    query.Options.Timeout = new TimeSpan(0, 0, 10);
+                    query.Options.ReturnImmediately = false;
+                    Log.Info("Query built");
+                    foreach (ManagementObject obj in query.Get())
                     {
-                        var key = (uint)obj.GetPropertyValue("IDProcess");
-                        processStats[key] = new ulong[] { (ulong)obj.GetPropertyValue("PercentProcessorTime"), (ulong)obj.GetPropertyValue("WorkingSet") };
+                        using (obj)
+                        {
+                            var key = (uint)obj.GetPropertyValue("IDProcess");
+                            Log.Info(key);
+                            processStats[key] = new ulong[] { (ulong)obj.GetPropertyValue("PercentProcessorTime"), (ulong)obj.GetPropertyValue("WorkingSet") };
+                        }
                     }
                 }
+                // bare catch, as I don't know what this can throw
+                catch (Exception e)
+                {
+                    Log.Error("Query timeout in ProcessStats: " + e.Message);
+                }
+                Log.Info("Returning from ProcessStats");
                 return processStats;
+
             }
         }
 
@@ -135,6 +154,10 @@ namespace BoxedIce.ServerDensity.Agent.Checks
             {
                 using (var query = new ManagementObjectSearcher("SELECT TotalVisibleMemorySize FROM Win32_OperatingSystem"))
                 {
+
+                    query.Options.Timeout = new TimeSpan(0, 0, 10);
+                    query.Options.ReturnImmediately = false;
+                    Log.Info("Query built");
                     foreach (var obj in query.Get())
                     {
                         using (obj)
@@ -143,6 +166,7 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                         }
                     }
                     return 0;
+
                 }
             }
             catch (Exception ex)

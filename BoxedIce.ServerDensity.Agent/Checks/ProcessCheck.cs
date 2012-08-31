@@ -7,6 +7,7 @@ using System.Management.Instrumentation;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using BoxedIce.ServerDensity.Agent.PluginSupport;
 using log4net;
 
@@ -127,15 +128,39 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                     query.Options.Timeout = new TimeSpan(0, 0, 10);
                     query.Options.ReturnImmediately = false;
                     Log.Info("Query built");
-                    foreach (ManagementObject obj in query.Get())
+                    bool ok = false;
+                    ManagementObjectCollection collection;
+                    ManualResetEvent mre = new ManualResetEvent(false);
+                    Thread thread1 = new Thread(() =>
                     {
-                        using (obj)
+                        try
                         {
-                            var key = (uint)obj.GetPropertyValue("IDProcess");
-                            Log.Info(key);
-                            processStats[key] = new ulong[] { (ulong)obj.GetPropertyValue("PercentProcessorTime"), (ulong)obj.GetPropertyValue("WorkingSet") };
+                            collection = query.Get();
+
+                            foreach (ManagementObject obj in collection)
+                            {
+                                using (obj)
+                                {
+                                    var key = (uint)obj.GetPropertyValue("IDProcess");
+                                    Log.Info(key);
+                                    processStats[key] = new ulong[] { (ulong)obj.GetPropertyValue("PercentProcessorTime"), (ulong)obj.GetPropertyValue("WorkingSet") };
+                                }
+                            }
                         }
-                    }
+
+                        catch (System.UnauthorizedAccessException)
+                        {
+                            Log.Error("Unauthorized exception in query");
+                        }
+
+                        catch (System.Runtime.InteropServices.COMException)
+                        {
+                            Log.Error("COMException in query");
+                        }
+                        mre.Set();
+                    });
+                    thread1.Start();
+                    ok = mre.WaitOne(5000); // wait 5 seconds     
                 }
                 // bare catch, as I don't know what this can throw
                 catch (Exception e)
@@ -158,6 +183,8 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                     query.Options.Timeout = new TimeSpan(0, 0, 10);
                     query.Options.ReturnImmediately = false;
                     Log.Info("Query built");
+
+
                     foreach (var obj in query.Get())
                     {
                         using (obj)

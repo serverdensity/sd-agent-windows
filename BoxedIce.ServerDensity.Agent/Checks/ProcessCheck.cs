@@ -184,15 +184,40 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                     query.Options.ReturnImmediately = false;
                     Log.Info("Query built");
 
-
-                    foreach (var obj in query.Get())
+                    bool ok = false;
+                    ManagementObjectCollection collection;
+                    ManualResetEvent mre = new ManualResetEvent(false);
+                    ulong value = 0;
+                    Thread thread1 = new Thread(() =>
                     {
-                        using (obj)
+                        try
                         {
-                            return (ulong)obj.GetPropertyValue("TotalVisibleMemorySize") * 1024;
+                            collection = query.Get();
+
+                            foreach (ManagementObject obj in collection)
+                            {
+                                using (obj)
+                                {
+                                    value = (ulong)obj.GetPropertyValue("TotalVisibleMemorySize") * 1024;
+                                }
+                            }
                         }
-                    }
-                    return 0;
+
+                        catch (System.UnauthorizedAccessException)
+                        {
+                            Log.Error("Unauthorized exception in query");
+                        }
+
+                        catch (System.Runtime.InteropServices.COMException)
+                        {
+                            Log.Error("COMException in query");
+                        }
+                        mre.Set();
+                    });
+                    thread1.Start();
+                    ok = mre.WaitOne(5000); // wait 5 seconds     
+
+                    return value;
 
                 }
             }

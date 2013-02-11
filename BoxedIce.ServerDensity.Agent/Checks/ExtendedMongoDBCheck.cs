@@ -73,6 +73,23 @@ namespace BoxedIce.ServerDensity.Agent.Checks
             return status;
         }
 
+        private int[] GetVersion(BsonDocument statusOutput)
+        {
+            if (statusOutput.Contains("version"))
+            {
+                var splits = statusOutput["version"].AsString.Split('.');
+
+                var retVal = new List<int>();
+                foreach (var split in splits)
+                {
+                    retVal.Add(int.Parse(split));
+                }
+
+                return retVal.ToArray();
+            }
+            return null;
+        }
+
         private void FillVersion(BsonDocument statusOutput, IDictionary<string, object> status)
         {
             if (statusOutput.Contains("version"))
@@ -88,7 +105,17 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                 BsonDocument globalLockOutput = (BsonDocument)statusOutput["globalLock"];
                 IDictionary<string, object> globalLock = new Dictionary<string, object>();
                 status.Add("globalLock", globalLock);
-                globalLock.Add("ratio", globalLockOutput["ratio"]);
+
+                var version = this.GetVersion(statusOutput);
+                // mongodb over 2.2.0 doesn't have a global lock, so we can't report on it
+                if (version != null && version[0] >= 2 && version[1] >= 2)
+                {
+                    globalLock.Add("ratio", 0);
+                }
+                else
+                {
+                    globalLock.Add("ratio", globalLockOutput["ratio"]);
+                }
 
                 BsonDocument currentQueueOutput = (BsonDocument)globalLockOutput["currentQueue"];
                 IDictionary<string, object> currentQueue = new Dictionary<string, object>();

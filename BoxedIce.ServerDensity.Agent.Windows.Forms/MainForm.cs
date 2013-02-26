@@ -131,7 +131,7 @@ namespace BoxedIce.ServerDensity.Agent.Windows.Forms
         {
             if (!IsURLValid())
             {
-                MessageBox.Show("Your Server Density URL is incorrect. It needs to be in the form http://example.serverdensity.com (or using https).", "Invalid URL", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Your Server Density URL is incorrect. It needs to be in the form http://example.serverdensity.com or http://example.serverdensity.io (or using https).", "Invalid URL", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (!IsAgentKeyValid())

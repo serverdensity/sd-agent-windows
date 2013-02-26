@@ -373,7 +373,7 @@ namespace BoxedIce.ServerDensity.Agent.Windows.Forms
         private readonly string ConfigWriterExe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BoxedIce.ServerDensity.Agent.ConfigWriter.exe");
         private readonly string DownloaderExe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BoxedIce.ServerDensity.Agent.Downloader.exe");
         private readonly string PluginHelperExe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BoxedIce.ServerDensity.Agent.Plugins.Windows.Forms.exe");
-        private readonly Regex UrlRegex = new Regex(@"http(s)?(\:\/\/)[a-zA-Z0-9_\-]+\.(serverdensity.com|testserverdensity.co.uk)$");
+        private readonly Regex UrlRegex = new Regex(@"http(s)?(\:\/\/)[a-zA-Z0-9_\-]+\.(serverdensity.com|testserverdensity.co.uk|serverdensity.io)$");
         private readonly Regex AgentKeyRegex = new Regex(@"^[a-zA-Z0-9]+$");
     }
 }

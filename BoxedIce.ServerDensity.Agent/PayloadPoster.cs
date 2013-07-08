@@ -73,7 +73,7 @@ namespace BoxedIce.ServerDensity.Agent
                 byte[] response = client.UploadValues(url, "POST", data);
                 string responseText = Encoding.ASCII.GetString(response);
 
-                if (responseText != "OK")
+                if (responseText != "OK" && responseText != "\"OK\"")
                 {
                     Log.ErrorFormat("URL {0} returned: {1}", url, responseText);
                 }

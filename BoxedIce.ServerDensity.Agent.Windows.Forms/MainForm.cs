@@ -131,7 +131,7 @@ namespace BoxedIce.ServerDensity.Agent.Windows.Forms
         {
             if (!IsURLValid())
             {
-                MessageBox.Show("Your Server Density URL is incorrect. It needs to be in the form http://example.serverdensity.com (or using https).", "Invalid URL", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Your Server Density URL is incorrect. It needs to be in the form http://example.serverdensity.com or http://example.serverdensity.io (or using https).", "Invalid URL", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (!IsAgentKeyValid())
@@ -373,7 +373,7 @@ namespace BoxedIce.ServerDensity.Agent.Windows.Forms
         private readonly string ConfigWriterExe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BoxedIce.ServerDensity.Agent.ConfigWriter.exe");
         private readonly string DownloaderExe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BoxedIce.ServerDensity.Agent.Downloader.exe");
         private readonly string PluginHelperExe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BoxedIce.ServerDensity.Agent.Plugins.Windows.Forms.exe");
-        private readonly Regex UrlRegex = new Regex(@"http(s)?(\:\/\/)[a-zA-Z0-9_\-]+\.(serverdensity.com|testserverdensity.co.uk)$");
+        private readonly Regex UrlRegex = new Regex(@"http(s)?(\:\/\/)[a-zA-Z0-9_\-]+\.(serverdensity.com|testserverdensity.co.uk|serverdensity.io)$");
         private readonly Regex AgentKeyRegex = new Regex(@"^[a-zA-Z0-9]+$");
     }
 }

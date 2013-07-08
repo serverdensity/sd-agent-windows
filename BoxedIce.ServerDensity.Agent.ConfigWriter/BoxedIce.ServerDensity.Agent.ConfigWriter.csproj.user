@@ -11,9 +11,9 @@
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <StartArguments>http://example.boxedice.com testing False "" "" False ""</StartArguments>
+    <StartArguments>http://example.boxedice.com testing False "" "" False False False "" True</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <StartArguments>"http://example.boxedice.com" "testing" False "" "" False False False "" False</StartArguments>
-	</PropertyGroup>
+  </PropertyGroup>
 </Project>

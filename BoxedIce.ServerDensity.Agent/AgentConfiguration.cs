@@ -117,6 +117,41 @@ namespace BoxedIce.ServerDensity.Agent
                 xml["configuration"]["agent"].SetAttribute("sqlServerStatus", SQLServerChecks.ToString());
                 xml["configuration"]["agent"].SetAttribute("customPrefix", CustomPrefix);
                 xml["configuration"]["agent"].SetAttribute("eventViewer", EventViewer.ToString());
+
+                if (EventViewer)
+                {
+                    var node = xml["configuration"]["log4net"]["root"].SelectSingleNode("./appender-ref");
+                    if (node != null)
+                    {
+                        try
+                        {
+                            node.Attributes["ref"].Value = "EventLog";
+                        }
+                        catch
+                        {
+                            var x = xml.CreateAttribute("ref");
+                            x.Value = "EventLog";
+                            node.Attributes.Append(x);
+                        }
+                    }
+                    else
+                    {
+                        var nodeToAdd = xml.CreateNode(XmlNodeType.Element, "appender-ref", xml.NamespaceURI);
+                        var refAttribute = xml.CreateAttribute("ref");
+                        refAttribute.Value = "EventLog";
+                        nodeToAdd.Attributes.Append(refAttribute);
+                        xml["configuration"]["log4net"]["root"].AppendChild(nodeToAdd);
+                    }
+                }
+                else
+                {
+                    var node = xml["configuration"]["log4net"]["root"].SelectSingleNode("./appender-ref");
+                    if (node != null)
+                    {
+                        xml["configuration"]["log4net"]["root"].RemoveChild(node);
+                    }
+                }
+
                 XmlWriterSettings xmlSettings = new XmlWriterSettings();
                 xmlSettings.Indent = true;
                 using (XmlWriter writer = XmlWriter.Create(ConfigFile, xmlSettings))

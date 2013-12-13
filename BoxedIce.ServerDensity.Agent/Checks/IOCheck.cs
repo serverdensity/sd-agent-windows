@@ -87,20 +87,22 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                     driveResults[metric.MetricName] = metric.Counter.NextValue() / metric.Divisor;
                 }
 
-                try
+
+                var read = (float)driveResults["r/s"];
+                var write = (float)driveResults["w/s"];
+
+                var total = read + write;
+                float ratio = (read / total) * 100;
+
+                if (!float.IsNaN(ratio))
                 {
-                    var read = (float)driveResults["r/s"];
-                    var write = (float)driveResults["w/s"];
-
-                    var total = read + write;
-                    var ratio = (read / total) * 100;
-
                     driveResults["rwratio"] = ratio;
                 }
-                catch (DivideByZeroException)
+                else
                 {
-                    driveResults["rwratio"] = 1.0;
+                    driveResults["rwratio"] = 0.0;
                 }
+
 
                 results[drive.DriveName] = driveResults;
             }

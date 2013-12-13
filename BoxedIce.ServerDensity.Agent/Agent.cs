@@ -95,6 +95,7 @@ namespace BoxedIce.ServerDensity.Agent
                 Checks.Add(new PhysicalMemoryCachedCheck());
                 Checks.Add(new SwapMemoryFreeCheck());
                 Checks.Add(new SwapMemoryUsedCheck());
+                Checks.Add(new IOCheck());
 
                 if (_config.IISStatus)
                 {

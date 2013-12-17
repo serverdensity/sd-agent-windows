@@ -183,6 +183,20 @@ namespace BoxedIce.ServerDensity.Agent.Checks
             }
         }
 
+        private void AddBlankBTree(BsonDocument btreeOutput)
+        {
+            // We add a blank document, since the server is expecting
+            // these btree index values to be present.
+            btreeOutput.Add("accesses", 0);
+            btreeOutput.Add("accessesPS", 0);
+            btreeOutput.Add("hits", 0);
+            btreeOutput.Add("hitsPS", 0);
+            btreeOutput.Add("misses", 0);
+            btreeOutput.Add("missesPS", 0);
+            btreeOutput.Add("missRatio", 0D);
+            btreeOutput.Add("missRatioPS", 0);
+        }
+
         private void FillBaseStatistics(BsonDocument statusOutput, IDictionary<string, object> status)
         {
             BsonDocument indexCountersOutput = (BsonDocument)statusOutput["indexCounters"];
@@ -202,20 +216,20 @@ namespace BoxedIce.ServerDensity.Agent.Checks
             // Index counters are currently not supported on Windows.
             if (!indexCountersOutput.Contains("note") || indexCountersOutput["note"] == null)
             {
-                btreeOutput = (BsonDocument)indexCountersOutput["btree"];
+                var version = this.GetVersion(statusOutput);
+                // mongodb over 2.2.0 doesn't have a global lock, so we can't report on it
+                if (version != null && version[0] <= 2 && version[1] <= 2)
+                {
+                    btreeOutput = (BsonDocument)indexCountersOutput["btree"];
+                }
+                else
+                {
+                    this.AddBlankBTree(btreeOutput);
+                }
             }
             else
             {
-                // We add a blank document, since the server is expecting
-                // these btree index values to be present.
-                btreeOutput.Add("accesses", 0);
-                btreeOutput.Add("accessesPS", 0);
-                btreeOutput.Add("hits", 0);
-                btreeOutput.Add("hitsPS", 0);
-                btreeOutput.Add("misses", 0);
-                btreeOutput.Add("missesPS", 0);
-                btreeOutput.Add("missRatio", 0D);
-                btreeOutput.Add("missRatioPS", 0);
+                this.AddBlankBTree(btreeOutput);
             }
 
             BsonDocument opCountersOutput = (BsonDocument)statusOutput["opcounters"];

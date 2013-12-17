@@ -86,6 +86,7 @@
     <Compile Include="Checks\ExtendedMongoDBCheck.cs" />
     <Compile Include="Checks\IISCheck.cs" />
     <Compile Include="Checks\DriveInfoBasedDiskUsageCheck.cs" />
+    <Compile Include="Checks\IOCheck.cs" />
     <Compile Include="Checks\PerformanceCounterBasedCheck.cs" />
     <Compile Include="Checks\PerformanceCounterBasedProcessCheck.cs" />
     <Compile Include="Checks\PhysicalMemoryCachedCheck.cs" />

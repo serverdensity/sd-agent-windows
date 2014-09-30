@@ -52,7 +52,7 @@ namespace BoxedIce.ServerDensity.Agent.Checks
             foreach (string file in assemblies)
             {
                 Log.DebugFormat("Loading {0}...", file);
-                Assembly asm = Assembly.LoadFile(file);
+                Assembly asm = Assembly.LoadFrom(file);
                 Log.Debug("done.");
                 foreach (Type type in asm.GetTypes())
                 {

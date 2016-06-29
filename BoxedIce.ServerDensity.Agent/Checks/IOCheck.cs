@@ -40,7 +40,9 @@ namespace BoxedIce.ServerDensity.Agent.Checks
                 }
 
                 var drive = new Drive();
-                drive.DriveName = instance.Split(new char[1] { ' ' }, 2)[1];
+
+                string[] splitInstance = instance.Split(new char[] { ' ' }, 2);
+                drive.DriveName = splitInstance.Length >= 2 ? splitInstance[1] : instance;
                 drive.InstanceName = instance;
                 drive.Metrics = new List<DriveMetric>();
 

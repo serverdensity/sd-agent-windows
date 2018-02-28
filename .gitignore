@@ -21,3 +21,4 @@ _ReSharper.*
 *.exe
 .DS_Store
 *.InstallLog
+/.vs

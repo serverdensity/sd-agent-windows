@@ -1,24 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxedIce.ServerDensity.Agent", "BoxedIce.ServerDensity.Agent\BoxedIce.ServerDensity.Agent.csproj", "{BF3E0C66-7707-4357-9172-2B00F10F9913}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxedIce.ServerDensity.Agent.WindowsService", "BoxedIce.ServerDensity.Agent.WindowsService\BoxedIce.ServerDensity.Agent.WindowsService.csproj", "{738ABC34-47EE-4163-88AB-475B2DA53B34}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxedIce.ServerDensity.Agent.Windows.Forms", "BoxedIce.ServerDensity.Agent.Windows.Forms\BoxedIce.ServerDensity.Agent.Windows.Forms.csproj", "{6224646C-89CC-497A-B3CC-24C78A15C390}"
-EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "BoxedIce.ServerDensity.Agent.Installer", "BoxedIce.ServerDensity.Agent.Installer\BoxedIce.ServerDensity.Agent.Installer.wixproj", "{F8C798B7-1414-4702-9C11-C21C790107BE}"
-	ProjectSection(ProjectDependencies) = postProject
-		{738ABC34-47EE-4163-88AB-475B2DA53B34} = {738ABC34-47EE-4163-88AB-475B2DA53B34}
-		{4D46F955-8025-4ACD-9EA2-F14E39F9157B} = {4D46F955-8025-4ACD-9EA2-F14E39F9157B}
-		{BF3E0C66-7707-4357-9172-2B00F10F9913} = {BF3E0C66-7707-4357-9172-2B00F10F9913}
-		{6224646C-89CC-497A-B3CC-24C78A15C390} = {6224646C-89CC-497A-B3CC-24C78A15C390}
-		{15790C8C-BB6C-4D05-8EBD-79C88DFE8C64} = {15790C8C-BB6C-4D05-8EBD-79C88DFE8C64}
-		{6CD3D391-7A38-4312-BFA0-543D9DD49215} = {6CD3D391-7A38-4312-BFA0-543D9DD49215}
-		{CD8D94BF-26B0-428E-8FEE-658C623FB252} = {CD8D94BF-26B0-428E-8FEE-658C623FB252}
-		{6A68C2EB-1842-4B84-97C9-885BA534A280} = {6A68C2EB-1842-4B84-97C9-885BA534A280}
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55} = {D117E8F7-3581-4F7D-A377-75EE5CD4AA55}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxedIce.ServerDensity.Agent.ConfigWriter", "BoxedIce.ServerDensity.Agent.ConfigWriter\BoxedIce.ServerDensity.Agent.ConfigWriter.csproj", "{6CD3D391-7A38-4312-BFA0-543D9DD49215}"
 EndProject
@@ -27,8 +16,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxedIce.ServerDensity.Agent.PluginSupport", "BoxedIce.ServerDensity.Agent.PluginSupport\BoxedIce.ServerDensity.Agent.PluginSupport.csproj", "{6A68C2EB-1842-4B84-97C9-885BA534A280}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxedIce.ServerDensity.Agent.Downloader", "BoxedIce.ServerDensity.Agent.Downloader\BoxedIce.ServerDensity.Agent.Downloader.csproj", "{CD8D94BF-26B0-428E-8FEE-658C623FB252}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxedIce.ServerDensity.Agent.MongoDB", "BoxedIce.ServerDensity.Agent.MongoDB\BoxedIce.ServerDensity.Agent.MongoDB.csproj", "{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxedIce.ServerDensity.Agent.Plugins.Windows.Forms", "BoxedIce.ServerDensity.Agent.Plugins.Windows.Forms\BoxedIce.ServerDensity.Agent.Plugins.Windows.Forms.csproj", "{15790C8C-BB6C-4D05-8EBD-79C88DFE8C64}"
 EndProject
@@ -90,20 +77,6 @@ Global
 		{6224646C-89CC-497A-B3CC-24C78A15C390}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6224646C-89CC-497A-B3CC-24C78A15C390}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6224646C-89CC-497A-B3CC-24C78A15C390}.Release|x86.ActiveCfg = Release|Any CPU
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Build|Any CPU.ActiveCfg = Release|x86
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Build|Mixed Platforms.ActiveCfg = Release|x86
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Build|x86.ActiveCfg = Release|x86
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Build|x86.Build.0 = Release|x86
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Debug|x86.ActiveCfg = Debug|x86
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Debug|x86.Build.0 = Debug|x86
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Release|Any CPU.ActiveCfg = Release|x86
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Release|Mixed Platforms.Build.0 = Release|x86
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Release|x86.ActiveCfg = Release|x86
-		{F8C798B7-1414-4702-9C11-C21C790107BE}.Release|x86.Build.0 = Release|x86
 		{6CD3D391-7A38-4312-BFA0-543D9DD49215}.Build|Any CPU.ActiveCfg = Release|Any CPU
 		{6CD3D391-7A38-4312-BFA0-543D9DD49215}.Build|Any CPU.Build.0 = Release|Any CPU
 		{6CD3D391-7A38-4312-BFA0-543D9DD49215}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -164,21 +137,6 @@ Global
 		{CD8D94BF-26B0-428E-8FEE-658C623FB252}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{CD8D94BF-26B0-428E-8FEE-658C623FB252}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{CD8D94BF-26B0-428E-8FEE-658C623FB252}.Release|x86.ActiveCfg = Release|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Build|Any CPU.ActiveCfg = Release|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Build|Any CPU.Build.0 = Release|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Build|Mixed Platforms.Build.0 = Release|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Build|x86.ActiveCfg = Release|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{D117E8F7-3581-4F7D-A377-75EE5CD4AA55}.Release|x86.ActiveCfg = Release|Any CPU
 		{15790C8C-BB6C-4D05-8EBD-79C88DFE8C64}.Build|Any CPU.ActiveCfg = Release|x86
 		{15790C8C-BB6C-4D05-8EBD-79C88DFE8C64}.Build|Mixed Platforms.ActiveCfg = Release|x86
 		{15790C8C-BB6C-4D05-8EBD-79C88DFE8C64}.Build|Mixed Platforms.Build.0 = Release|x86
@@ -197,5 +155,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D6CEBBDD-0FBC-406A-B4CF-0671C24942AF}
 	EndGlobalSection
 EndGlobal
